@@ -1,1 +1,63 @@
 databaseChangeLog:
+  - changeSet:
+      id: 1-create-products
+      author: yassine
+      changes:
+        - createTable:
+            tableName: products
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column: { name: lead_time, type: INTEGER }
+              - column: { name: available, type: INTEGER }
+              - column: { name: type, type: VARCHAR(255) }
+              - column: { name: name, type: VARCHAR(255) }
+              - column: { name: expiry_date, type: DATE }
+              - column: { name: season_start_date, type: DATE }
+              - column: { name: season_end_date, type: DATE }
+
+  - changeSet:
+      id: 2-create-orders
+      author: yassine
+      changes:
+        - createTable:
+            tableName: orders
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+  - changeSet:
+      id: 3-create-order-items
+      author: yassine
+      changes:
+        - createTable:
+            tableName: order_items
+            columns:
+              - column:
+                  name: order_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_order_items_order
+                    references: orders(id)
+              - column:
+                  name: product_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_order_items_product
+                    references: products(id)
+        - addPrimaryKey:
+            tableName: order_items
+            columnNames: order_id, product_id
+            constraintName: pk_order_items
